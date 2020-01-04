@@ -1,0 +1,3 @@
+[submodule "cmake-nRF5x"]
+	path = cmake-nRF5x
+	url = https://github.com/nrbrook/cmake-nRF5x
