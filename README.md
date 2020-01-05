@@ -3,7 +3,7 @@ This project is an example of implementing a Nordic CMake project from scratch u
 The steps below are also available at https://nrbtech.io/blog/2020/1/4/using-cmake-for-nordic-nrf52-projects
 
 To test this project from the repo, run
-```shell script
+```shell
 cmake -Bcmake-build-download -G "Unix Makefiles"
 cmake --build cmake-build-download/ --target download
 ```
@@ -12,7 +12,7 @@ cmake --build cmake-build-download/ --target download
 
 First, lets create a directory, and initialise a git repo:
 
-```shell script
+```shell
 # create the directory
 mkdir "example"
 cd example
@@ -31,12 +31,12 @@ keys
 
 Next, we need to add the cmake-nRF5x project:
 
-```shell script
+```shell
 git submodule add https://github.com/nrbrook/cmake-nRF5x
 ```
 
 Then, copy the example `CMakeLists.txt` as recommended in the readme:
-```shell script
+```shell
 cp cmake-nRF5x/example/CMakeLists.txt .
 mkdir src
 cp cmake-nRF5x/example/src/CMakeLists.txt src/
@@ -50,14 +50,14 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake-nRF5x/CMake_nRF5x.cmake")
 
 Then we can use the script to download the dependencies:
 
-```shell script
+```shell
 cmake -Bcmake-build-download -G "Unix Makefiles"
 cmake --build cmake-build-download/ --target download
 ```
 
 Then, copy across some files from an SDK example project
 
-```shell script
+```shell
 cp toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_blinky/pca10040/s132/armgcc/ble_app_blinky_gcc_nrf52.ld src/gcc_nrf52.ld
 cp toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_blinky/pca10040/s132/config/sdk_config.h src/
 ```
@@ -93,7 +93,7 @@ Create an `src/app_config.h` file to just modify the parts of `sdk_config.h` we 
 
 We are going to include the DFU bootloader too, so we need to generate keys:
 
-```shell script
+```shell
 mkdir keys
 nrfutil keys generate keys/dfu_private.key
 nrfutil keys display --key pk --format code keys/dfu_private.key --out_file keys/dfu_public_key.c
@@ -160,13 +160,13 @@ nRF5x_print_size(${target} ${NRF5_LINKER_SCRIPT} TRUE)
 
 Then we are ready to build and run our example. First, run JLink tools to get the RTT output:
 
-```shell script
+```shell
 cmake -Bcmake-build-debug -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug
 cmake --build cmake-build-debug/ --target START_JLINK
 ```
 
 Then, build the merge and flash target:
-```shell script
+```shell
 cmake --build cmake-build-debug/ --target flash_bl_merge_example
 ```
 
