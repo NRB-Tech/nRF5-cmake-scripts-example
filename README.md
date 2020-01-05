@@ -1,6 +1,15 @@
 This project is an example of implementing a Nordic CMake project from scratch using cmake-nRF5x.
 
-The steps below are also available at https://nrbtech.io/blog/2020/1/4/using-cmake-for-nordic-nrf52-projects
+This project depends on the following dependencies:
+
+- [JLink](https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack) by Segger - interface software for the JLink familiy of programmers
+- [Nordic command line tools](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs) (`nrfjprog` and `mergehex`) by Nordic Semiconductor - Wrapper utility around JLink
+- [Nordic nrfutil](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutil%2FUG%2Fnrfutil%2Fnrfutil_intro.html) by Nordic Semiconductor - a utility for generating DFU packages. Currently requires installing with `pip install nrfutil --pre` to install the prerelease 6.0.0 version.  
+- [ARM GNU Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) by ARM and the GCC Team - compiler toolchain for embedded (= bare metal) ARM chips. On a Mac, can be installed with homebrew:
+    ```shell
+    brew tap ArmMbed/homebrew-formulae
+    brew install arm-none-eabi-gcc
+    ```
 
 To test this project from the repo, run
 ```shell
@@ -9,6 +18,8 @@ cmake --build cmake-build-download/ --target download
 ```
 
 ## Recreate this project
+
+The steps below are also available at https://nrbtech.io/blog/2020/1/4/using-cmake-for-nordic-nrf52-projects
 
 First, lets create a directory, and initialise a git repo:
 
