@@ -62,7 +62,7 @@ cp toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_blink
 cp toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_blinky/pca10040/s132/config/sdk_config.h src/
 ```
 
-At this point, you can open the project in CLion or your editor of choice to edit the files. See the [CLion tutorial]() for steps setting it up.
+At this point, you can open the project in CLion or your editor of choice to edit the files. See the [CLion tutorial](https://www.nrbtech.io/blog/2020/1/4/using-clion-for-nordic-nrf52-projects) for steps setting it up.
 
 Add a file `src/main.c` and add some source code. Here we add some simple code to log a message.
 
