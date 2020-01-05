@@ -2,9 +2,17 @@ This project is an example of implementing a Nordic CMake project from scratch u
 
 The steps below are also available at https://nrbtech.io/blog/2020/1/4/using-cmake-for-nordic-nrf52-projects
 
+To test this project from the repo, run
+```shell script
+cmake -Bcmake-build-download -G "Unix Makefiles"
+cmake --build cmake-build-download/ --target download
+```
+
+## Recreate this project
+
 First, lets create a directory, and initialise a git repo:
 
-```bash
+```shell script
 # create the directory
 mkdir "example"
 cd example
@@ -23,12 +31,12 @@ keys
 
 Next, we need to add the cmake-nRF5x project:
 
-```bash
+```shell script
 git submodule add https://github.com/nrbrook/cmake-nRF5x
 ```
 
 Then, copy the example `CMakeLists.txt` as recommended in the readme:
-```bash
+```shell script
 cp cmake-nRF5x/example/CMakeLists.txt .
 mkdir src
 cp cmake-nRF5x/example/src/CMakeLists.txt src/
@@ -36,25 +44,27 @@ cp cmake-nRF5x/example/src/CMakeLists.txt src/
 
 We need to edit the example `CMakeLists.txt` to update the path to the script, near the bottom:
 
-```CMake
+```cmake
 include("${CMAKE_CURRENT_LIST_DIR}/cmake-nRF5x/CMake_nRF5x.cmake")
 ```
 
 Then we can use the script to download the dependencies:
 
-```bash
+```shell script
 cmake -Bcmake-build-download -G "Unix Makefiles"
 cmake --build cmake-build-download/ --target download
 ```
 
 Then, copy across some files from an SDK example project
 
-```
+```shell script
 cp toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_blinky/pca10040/s132/armgcc/ble_app_blinky_gcc_nrf52.ld src/gcc_nrf52.ld
 cp toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_blinky/pca10040/s132/config/sdk_config.h src/
 ```
 
-At this point, you can open the project in CLion or your editor of choice to edit the files. Add a file `src/main.c` and add some source code. Here we add some simple code to log a message.
+At this point, you can open the project in CLion or your editor of choice to edit the files. See the [CLion tutorial]() for steps setting it up.
+
+Add a file `src/main.c` and add some source code. Here we add some simple code to log a message.
 
 ```c
 #include "nrf_log_default_backends.h"
@@ -79,12 +89,11 @@ Create an `src/app_config.h` file to just modify the parts of `sdk_config.h` we 
 #define NRF_LOG_DEFERRED 0 // flush logs immediately
 #define NRF_LOG_ALLOW_OVERFLOW 0 // no overflow
 #define SEGGER_RTT_CONFIG_DEFAULT_MODE 2 // block until processed
-
 ```
 
 We are going to include the DFU bootloader too, so we need to generate keys:
 
-```bash
+```shell script
 mkdir keys
 nrfutil keys generate keys/dfu_private.key
 nrfutil keys display --key pk --format code keys/dfu_private.key --out_file keys/dfu_public_key.c
@@ -92,7 +101,7 @@ nrfutil keys display --key pk --format code keys/dfu_private.key --out_file keys
 
 After these changes we need to update our `src/CMakeLists.txt` file from the example version:
 
-```
+```cmake
 string(SUBSTRING ${PLATFORM} 0 5 NRF_FAMILY)
 set(NRF5_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/gcc_${NRF_FAMILY})
 
@@ -147,20 +156,19 @@ nRF5x_addDFU_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREV
 
 # print the size of consumed RAM and flash
 nRF5x_print_size(${target} ${NRF5_LINKER_SCRIPT} TRUE)
-
 ```
 
 Then we are ready to build and run our example. First, run JLink tools to get the RTT output:
 
-```bash
+```shell script
 cmake -Bcmake-build-debug -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug
 cmake --build cmake-build-debug/ --target START_JLINK
 ```
 
 Then, build the merge and flash target:
-```bash
+```shell script
 cmake --build cmake-build-debug/ --target flash_bl_merge_example
 ```
 
-You should see the "Hello world" log output in the RTT console!
+You should see the "Hello world" log output in the RTT console! From here you can add source code and include SDK libraries with the macros provided in `cmake-nRF5x/includes/libraries.cmake`.
 
