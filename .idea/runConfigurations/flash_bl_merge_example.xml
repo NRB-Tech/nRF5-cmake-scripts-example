@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="flash_bl_merge_example" type="com.jetbrains.cidr.embedded.customgdbserver.type" factoryName="com.jetbrains.cidr.embedded.customgdbserver.factory" PROGRAM_PARAMS="-device nrf52 -strict -timeout 0 -nogui -if swd -speed 1000 -endian little" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ExampleProject" TARGET_NAME="flash_bl_merge_example" CONFIG_NAME="Debug-arm-none-eabi" RUN_TARGET_PROJECT_NAME="ExampleProject" RUN_TARGET_NAME="example">
+    <custom-gdb-server version="1" gdb-connect="tcp:localhost:2331" executable="/usr/local/bin/JLinkGDBServer" warmup-ms="0" download-type="NONE" reset-cmd="monitor reset" />
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>
