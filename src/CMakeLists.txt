@@ -20,9 +20,9 @@ set(DFU_VERSION_STRING "${VERSION_STRING}")
 set(target example)
 
 # add the required libraries for this example
-nRF5x_addLog()
-nRF5x_addSeggerRTT()
-nRF5x_addAppError()
+nRF5_addLog()
+nRF5_addSeggerRTT()
+nRF5_addAppError()
 
 # usually you would include files in this directory here, like so:
 list(APPEND SOURCE_FILES
@@ -32,7 +32,7 @@ list(APPEND INCLUDE_DIRS
         "${CMAKE_CURRENT_SOURCE_DIR}"
         )
 
-nRF5x_addExecutable(${target} "${SOURCE_FILES}" "${INCLUDE_DIRS}" "${NRF5_LINKER_SCRIPT}")
+nRF5_addExecutable(${target} "${SOURCE_FILES}" "${INCLUDE_DIRS}" "${NRF5_LINKER_SCRIPT}")
 
 target_compile_definitions(${target} PRIVATE USE_APP_CONFIG)
 
@@ -40,15 +40,15 @@ target_compile_definitions(${target} PRIVATE USE_APP_CONFIG)
 set(bootloader_vars "")
 
 # add the secure bootloader build target
-nRF5x_addSecureBootloader(${target} "${PUBLIC_KEY}" "${bootloader_vars}")
+nRF5_addSecureBootloader(${target} "${PUBLIC_KEY}" "${bootloader_vars}")
 # add the bootloader merge target
-nRF5x_addBootloaderMergeTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE} ${SD_VALIDATION_TYPE} ${BOOTLOADER_VERSION})
+nRF5_addBootloaderMergeTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE} ${SD_VALIDATION_TYPE} ${BOOTLOADER_VERSION})
 # add the bootloader merged flash target
-nRF5x_addFlashTarget(bl_merge_${target} "${CMAKE_CURRENT_BINARY_DIR}/${target}_bl_merged.hex")
+nRF5_addFlashTarget(bl_merge_${target} "${CMAKE_CURRENT_BINARY_DIR}/${target}_bl_merged.hex")
 # Add the Bootloader + SoftDevice + App package target
-nRF5x_addDFU_BL_SD_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE} ${SD_VALIDATION_TYPE} ${BOOTLOADER_VERSION})
+nRF5_addDFU_BL_SD_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE} ${SD_VALIDATION_TYPE} ${BOOTLOADER_VERSION})
 # Add the App package target
-nRF5x_addDFU_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE})
+nRF5_addDFU_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE})
 
 # print the size of consumed RAM and flash
-nRF5x_print_size(${target} ${NRF5_LINKER_SCRIPT} TRUE)
+nRF5_print_size(${target} ${NRF5_LINKER_SCRIPT} TRUE)

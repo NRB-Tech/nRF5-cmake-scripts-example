@@ -1,4 +1,4 @@
-This project is an example of implementing a Nordic CMake project from scratch using cmake-nRF5x.
+This project is an example of implementing a Nordic CMake project from scratch using nRF5x-cmake-scripts.
 
 This project depends on the following dependencies:
 
@@ -40,23 +40,23 @@ keys
 " >> .gitignore
 ```
 
-Next, we need to add the cmake-nRF5x project:
+Next, we need to add the nRF5-cmake-scripts project:
 
 ```shell
-git submodule add https://github.com/nrbrook/cmake-nRF5x
+git submodule add https://github.com/NRB-Tech/nRF5-cmake-scripts
 ```
 
 Then, copy the example `CMakeLists.txt` as recommended in the readme:
 ```shell
-cp cmake-nRF5x/example/CMakeLists.txt .
+cp nRF5-cmake-scripts/example/CMakeLists.txt .
 mkdir src
-cp cmake-nRF5x/example/src/CMakeLists.txt src/
+cp nRF5-cmake-scripts/example/src/CMakeLists.txt src/
 ```
 
 We need to edit the example `CMakeLists.txt` to update the path to the script, near the bottom:
 
 ```cmake
-include("${CMAKE_CURRENT_LIST_DIR}/cmake-nRF5x/CMake_nRF5x.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
 ```
 
 Then we can use the script to download the dependencies:
@@ -181,5 +181,5 @@ Then, build the merge and flash target:
 cmake --build cmake-build-debug/ --target flash_bl_merge_example
 ```
 
-You should see the "Hello world" log output in the RTT console! From here you can add source code and include SDK libraries with the macros provided in `cmake-nRF5x/includes/libraries.cmake`.
+You should see the "Hello world" log output in the RTT console! From here you can add source code and include SDK libraries with the macros provided in `nRF5-cmake-scripts/includes/libraries.cmake`.
 

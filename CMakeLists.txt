@@ -44,12 +44,12 @@ message(STATUS "Configuring CMake for nRF5 SDK for ${PROJECT_NAME} ${VERSION_STR
 
 set(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR} CACHE STRING "" FORCE)
 
-include("${CMAKE_CURRENT_LIST_DIR}/cmake-nRF5x/CMake_nRF5x.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
 
 if(TARGET download)
     return()
 endif()
 
-nRF5x_setup()
+nRF5_setup()
 
 add_subdirectory("src")
