@@ -9,4 +9,8 @@ int main(void) {
     NRF_LOG_DEFAULT_BACKENDS_INIT();
 
     NRF_LOG_INFO("Hello world");
+
+    while(true) {
+        // do nothing
+    }
 }
