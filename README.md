@@ -33,7 +33,7 @@ cmake --build cmake-build-download/ --target download
 
 The steps below are also available at https://nrbtech.io/blog/2020/1/4/using-cmake-for-nordic-nrf52-projects
 
-First, in a terminal/command window clone the base project to set up the project structure:
+First, in a terminal/command window clone the [base project](https://github.com/NRB-Tech/nRF5-cmake-scripts-example-base) to set up the project structure:
 
 ```shell
 git clone --recurse-submodules git@github.com:NRB-Tech/nRF5-cmake-scripts-example-base.git .
@@ -49,6 +49,8 @@ We need to edit the example `CMakeLists.txt` to update the path to the script, n
 ```cmake
 include("${CMAKE_CURRENT_LIST_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
 ```
+
+_Note: You may also need to edit some of the other variables in this file for your platform, such as setting `NRFJPROG`, `MERGEHEX`, `NRFUTIL` and `PATCH_EXECUTABLE` manually if they are not in your `PATH`._
 
 Then we can use the script to download the dependencies:
 

@@ -16,8 +16,10 @@ set(SOFTDEVICE_VERSION "7.0.1" CACHE STRING "SoftDevice version")
 
 set(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR} CACHE STRING "" FORCE)
 
-# Windows users uncomment
-# set(PATCH_EXECUTABLE "$ENV{ProgramFiles\(x86\)}/GnuWin32/bin/patch.exe")
+# Windows users modify as required
+if(Win32)
+    set(PATCH_EXECUTABLE "$ENV{ProgramFiles\(x86\)}/GnuWin32/bin/patch.exe")
+endif()
 
 include("${CMAKE_SOURCE_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
 
