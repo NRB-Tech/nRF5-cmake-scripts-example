@@ -21,7 +21,6 @@ This project depends on the following dependencies:
         ```
 - [git](https://git-scm.com/) - A version control system
 - [CMake](https://cmake.org/) - A build tool
-- Windows only - [Patch](http://gnuwin32.sourceforge.net/packages/patch.htm)
 
 To test this project after cloning from the repo, run
 ```shell
