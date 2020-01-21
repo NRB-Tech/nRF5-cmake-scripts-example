@@ -21,9 +21,7 @@ if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
     set(PATCH_EXECUTABLE "$ENV{ProgramFiles\(x86\)}/GnuWin32/bin/patch.exe")
 endif()
 
-# must be set before project, otherwise causes linking issues on Windows
-set(CMAKE_SYSTEM_NAME "Generic")
-set(CMAKE_SYSTEM_PROCESSOR "ARM")
+include("${CMAKE_SOURCE_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
 
 # We enable the project() here for CMake to initialize variables s.a. "CMAKE_HOST_W32".
 # Languages are enabled _after_ the toolchain has been setup.
@@ -31,12 +29,11 @@ project(ExampleProject
         VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUGFIX}
         LANGUAGES NONE)
 
-include("${CMAKE_SOURCE_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
+message(STATUS "Configuring CMake for nRF5 SDK for ${PROJECT_NAME} ${VERSION_STRING}")
+nRF5_setup()
 
 if(TARGET download)
     return()
 endif()
 
-message(STATUS "Configuring CMake for nRF5 SDK for ${PROJECT_NAME} ${VERSION_STRING}")
-nRF5_setup()
 add_subdirectory("src")
