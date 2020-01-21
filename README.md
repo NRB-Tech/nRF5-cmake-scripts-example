@@ -41,16 +41,10 @@ git clone --recurse-submodules git@github.com:NRB-Tech/nRF5-cmake-scripts-exampl
 
 Then, copy the example `CMakeLists.txt` as recommended in the `nRF5-cmake-scripts` readme:
 ```shell
-cp nRF5-cmake-scripts/example/CMakeLists.txt .
+cmake -E copy nRF5-cmake-scripts/example/CMakeLists.txt .
 ```
 
-We need to edit the example `CMakeLists.txt` to update the path to the script, near the bottom:
-
-```cmake
-include("${CMAKE_CURRENT_LIST_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
-```
-
-_Note: You may also need to edit some of the other variables in this file for your platform, such as setting `NRFJPROG`, `MERGEHEX`, `NRFUTIL` and `PATCH_EXECUTABLE` manually if they are not in your `PATH`._
+_Note: You may also need to edit some of the variables in this file for your platform, such as setting `NRFJPROG`, `MERGEHEX`, `NRFUTIL` and `PATCH_EXECUTABLE` manually if they are not in your `PATH`._
 
 Then we can use the script to download the dependencies:
 
@@ -161,8 +155,10 @@ nRF5_addDFU_BL_SD_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} $
 # Add the App package target
 nRF5_addDFU_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE})
 
-# print the size of consumed RAM and flash
-nRF5_print_size(${target} ${NRF5_LINKER_SCRIPT} TRUE)
+# print the size of consumed RAM and flash - does not yet work on Windows
+if(NOT ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
+    nRF5_print_size(${target} ${NRF5_LINKER_SCRIPT} TRUE)
+endif()
 ```
 
 Then we are ready to build and run our example. First, run JLink tools to get the RTT output:
