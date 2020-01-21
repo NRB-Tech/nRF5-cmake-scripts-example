@@ -14,8 +14,16 @@ set(IC nRF52832)
 set(SOFTDEVICE_TYPE "s132" CACHE STRING "SoftDevice type")
 set(SOFTDEVICE_VERSION "7.0.1" CACHE STRING "SoftDevice version")
 
-set(CMAKE_SYSTEM_NAME "Generic")
-set(CMAKE_SYSTEM_PROCESSOR "ARM")
+set(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR} CACHE STRING "" FORCE)
+
+# Windows users uncomment
+# set(PATCH_EXECUTABLE "$ENV{ProgramFiles\(x86\)}/GnuWin32/bin/patch.exe")
+
+include("${CMAKE_SOURCE_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
+
+if(TARGET download)
+    return()
+endif()
 
 # We enable the project() here for CMake to initialize variables s.a. "CMAKE_HOST_W32".
 # Languages are enabled _after_ the toolchain has been setup.
@@ -24,15 +32,5 @@ project(ExampleProject
     LANGUAGES NONE)
 
 message(STATUS "Configuring CMake for nRF5 SDK for ${PROJECT_NAME} ${VERSION_STRING}")
-
-set(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR} CACHE STRING "" FORCE)
-
-include("${CMAKE_SOURCE_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
-
-if(TARGET download)
-    return()
-endif()
-
 nRF5_setup()
-
 add_subdirectory("src")

@@ -1,19 +1,31 @@
-This project is an example of implementing a Nordic CMake project from scratch using nRF5x-cmake-scripts.
+This project is an example of implementing a Nordic CMake project from scratch using nRF5-cmake-scripts.
 
 This project depends on the following dependencies:
 
-- [JLink](https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack) by Segger - interface software for the JLink familiy of programmers
+- A github account and SSH key configured
 - [Nordic command line tools](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs) (`nrfjprog` and `mergehex`) by Nordic Semiconductor - Wrapper utility around JLink
-- [Nordic nrfutil](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutil%2FUG%2Fnrfutil%2Fnrfutil_intro.html) by Nordic Semiconductor - a utility for generating DFU packages. Currently requires installing with `pip install nrfutil --pre` to install the prerelease 6.0.0 version.  
-- [ARM GNU Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) by ARM and the GCC Team - compiler toolchain for embedded (= bare metal) ARM chips. On a Mac, can be installed with homebrew:
-    ```shell
-    brew tap ArmMbed/homebrew-formulae
-    brew install arm-none-eabi-gcc
-    ```
+    - This also includes the JLink installer – install this
+- [Python 3](https://www.python.org/)
+- [Nordic nrfutil](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutil%2FUG%2Fnrfutil%2Fnrfutil_intro.html) by Nordic Semiconductor - a utility for generating DFU packages
+    - After installing Python, install with `pip install nrfutil`  
+- ARM GNU Toolchain by ARM and the GCC Team - compiler toolchain for embedded ARM chips.
+    - On a Mac, can be installed with homebrew:
+        ```shell
+        brew tap ArmMbed/homebrew-formulae
+        brew install arm-none-eabi-gcc
+        ```
+    - On other platforms you can download from the [GNU-ARM toolchain page](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
+    - On Windows, you need to add this to your PATH. You can do this temporarily in Powershell using:
+        ```Powershell
+        $env:Path += ";C:\Program Files (x86)\GNU Tools Arm Embedded\9 2019-q4-major\bin"
+        ```
+- [git](https://git-scm.com/) - A version control system
+- [CMake](https://cmake.org/) - A build tool
+- Windows only - [Patch](http://gnuwin32.sourceforge.net/packages/patch.htm)
 
-To test this project from the repo, run
+To test this project after cloning from the repo, run
 ```shell
-cmake -Bcmake-build-download -G "Unix Makefiles"
+cmake -Bcmake-build-download -G "Unix Makefiles" .
 cmake --build cmake-build-download/ --target download
 ```
 
@@ -21,36 +33,15 @@ cmake --build cmake-build-download/ --target download
 
 The steps below are also available at https://nrbtech.io/blog/2020/1/4/using-cmake-for-nordic-nrf52-projects
 
-First, lets create a directory, and initialise a git repo:
+First, in a terminal/command window clone the base project to set up the project structure:
 
 ```shell
-# create the directory
-mkdir "example"
-cd example
-# init git
-git init
-# fetch boilerplate .gitignore
-curl https://www.gitignore.io/api/linux,macos,cmake,clion,python,windows -o .gitignore
-# append project-specific gitignore additions
-echo "
-
-toolchains
-cmake-build-*
-keys
-" >> .gitignore
+git clone --recurse-submodules git@github.com:NRB-Tech/nRF5-cmake-scripts-example-base.git .
 ```
 
-Next, we need to add the nRF5-cmake-scripts project:
-
-```shell
-git submodule add https://github.com/NRB-Tech/nRF5-cmake-scripts
-```
-
-Then, copy the example `CMakeLists.txt` as recommended in the readme:
+Then, copy the example `CMakeLists.txt` as recommended in the `nRF5-cmake-scripts` readme:
 ```shell
 cp nRF5-cmake-scripts/example/CMakeLists.txt .
-mkdir src
-cp nRF5-cmake-scripts/example/src/CMakeLists.txt src/
 ```
 
 We need to edit the example `CMakeLists.txt` to update the path to the script, near the bottom:
@@ -62,18 +53,19 @@ include("${CMAKE_CURRENT_LIST_DIR}/nRF5-cmake-scripts/nRF5-cmake.cmake")
 Then we can use the script to download the dependencies:
 
 ```shell
-cmake -Bcmake-build-download -G "Unix Makefiles"
+cmake -Bcmake-build-download -G "Unix Makefiles" .
+# on Windows, run `cmake -Bcmake-build-download -G "MinGW Makefiles" .`
 cmake --build cmake-build-download/ --target download
 ```
 
 Then, copy across some files from an SDK example project
 
 ```shell
-cp toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_blinky/pca10040/s132/armgcc/ble_app_blinky_gcc_nrf52.ld src/gcc_nrf52.ld
-cp toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_blinky/pca10040/s132/config/sdk_config.h src/
+cmake -E copy toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_template/pca10040/s132/armgcc/ble_app_template_gcc_nrf52.ld src/gcc_nrf52.ld
+cmake -E copy toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_template/pca10040/s132/config/sdk_config.h src/
 ```
 
-At this point, you can open the project in CLion or your editor of choice to edit the files. See the [CLion tutorial](https://www.nrbtech.io/blog/2020/1/4/using-clion-for-nordic-nrf52-projects) for steps setting it up.
+At this point, you can open the project in CLion or your editor of choice to edit the files.
 
 Add a file `src/main.c` and add some source code. Here we add some simple code to log a message.
 
@@ -89,10 +81,13 @@ int main(void) {
     NRF_LOG_DEFAULT_BACKENDS_INIT();
 
     NRF_LOG_INFO("Hello world");
+    while(true) {
+        // do nothing
+    }
 }
 ```
 
-Create an `src/app_config.h` file to just modify the parts of `sdk_config.h` we want:
+Create an `src/app_config.h` file to override some of the default configuration in `sdk_config.h`:
 
 ```c
 #define NRF_LOG_BACKEND_RTT_ENABLED 1 // enable rtt
@@ -102,22 +97,20 @@ Create an `src/app_config.h` file to just modify the parts of `sdk_config.h` we 
 #define SEGGER_RTT_CONFIG_DEFAULT_MODE 2 // block until processed
 ```
 
-We are going to include the DFU bootloader too, so we need to generate keys:
+We are going to include the DFU bootloader too, so we need to generate keys. In terminal/command prompt:
 
 ```shell
-mkdir keys
 nrfutil keys generate keys/dfu_private.key
 nrfutil keys display --key pk --format code keys/dfu_private.key --out_file keys/dfu_public_key.c
 ```
 
-After these changes we need to update our `src/CMakeLists.txt` file from the example version:
+Now we need to create a file `src/CMakeLists.txt` to build our targets:
 
 ```cmake
-string(SUBSTRING ${PLATFORM} 0 5 NRF_FAMILY)
 set(NRF5_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/gcc_${NRF_FAMILY})
 
 # DFU requirements
-# List the softdevice versions previously used
+# List the softdevice versions previously used, or use FALSE if no previous softdevices
 set(PREVIOUS_SOFTDEVICES FALSE)
 # Set the location to the DFU private key
 set(PRIVATE_KEY ${CMAKE_CURRENT_SOURCE_DIR}/../keys/dfu_private.key)
@@ -135,11 +128,11 @@ set(DFU_VERSION_STRING "${VERSION_STRING}")
 set(target example)
 
 # add the required libraries for this example
-nRF5x_addLog()
-nRF5x_addSeggerRTT()
-nRF5x_addAppError()
+nRF5_addLog()
+nRF5_addSeggerRTT()
+nRF5_addAppError()
 
-# usually you would include files in this directory here, like so:
+# include files
 list(APPEND SOURCE_FILES
         main.c
         )
@@ -147,33 +140,36 @@ list(APPEND INCLUDE_DIRS
         "${CMAKE_CURRENT_SOURCE_DIR}"
         )
 
-nRF5x_addExecutable(${target} "${SOURCE_FILES}" "${INCLUDE_DIRS}" "${NRF5_LINKER_SCRIPT}")
+nRF5_addExecutable(${target} "${SOURCE_FILES}" "${INCLUDE_DIRS}" "${NRF5_LINKER_SCRIPT}")
 
+# make sdk_config.h import app_config.h
 target_compile_definitions(${target} PRIVATE USE_APP_CONFIG)
 
-# Here you would set a list of user variables to be defined for the bootloader makefile (which you have modified yourself)
+# Here you can set a list of user variables to be defined in the bootloader makefile (which you have modified yourself)
 set(bootloader_vars "")
 
 # add the secure bootloader build target
-nRF5x_addSecureBootloader(${target} "${PUBLIC_KEY}" "${bootloader_vars}")
+nRF5_addSecureBootloader(${target} "${PUBLIC_KEY}" "${bootloader_vars}")
 # add the bootloader merge target
-nRF5x_addBootloaderMergeTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE} ${SD_VALIDATION_TYPE} ${BOOTLOADER_VERSION})
+nRF5_addBootloaderMergeTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE} ${SD_VALIDATION_TYPE} ${BOOTLOADER_VERSION})
 # add the bootloader merged flash target
-nRF5x_addFlashTarget(bl_merge_${target} "${CMAKE_CURRENT_BINARY_DIR}/${target}_bl_merged.hex")
+nRF5_addFlashTarget(bl_merge_${target} "${CMAKE_CURRENT_BINARY_DIR}/${target}_bl_merged.hex")
 # Add the Bootloader + SoftDevice + App package target
-nRF5x_addDFU_BL_SD_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE} ${SD_VALIDATION_TYPE} ${BOOTLOADER_VERSION})
+nRF5_addDFU_BL_SD_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE} ${SD_VALIDATION_TYPE} ${BOOTLOADER_VERSION})
 # Add the App package target
-nRF5x_addDFU_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE})
+nRF5_addDFU_APP_PkgTarget(${target} ${DFU_VERSION_STRING} ${PRIVATE_KEY} ${PREVIOUS_SOFTDEVICES} ${APP_VALIDATION_TYPE})
 
 # print the size of consumed RAM and flash
-nRF5x_print_size(${target} ${NRF5_LINKER_SCRIPT} TRUE)
+nRF5_print_size(${target} ${NRF5_LINKER_SCRIPT} TRUE)
 ```
 
 Then we are ready to build and run our example. First, run JLink tools to get the RTT output:
 
 ```shell
-cmake -Bcmake-build-debug -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug
-cmake --build cmake-build-debug/ --target START_JLINK
+cmake -Bcmake-build-debug -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug .
+# On Windows, run `cmake -Bcmake-build-debug -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug .` 
+# If you get an error that the compiler cannot be found, ensure it is present in your PATH (try running `arm-none-eabi-gcc`). Windows users, see the dependencies section.
+cmake --build cmake-build-debug/ --target START_JLINK_RTT
 ```
 
 Then, build the merge and flash target:
@@ -183,3 +179,4 @@ cmake --build cmake-build-debug/ --target flash_bl_merge_example
 
 You should see the "Hello world" log output in the RTT console! From here you can add source code and include SDK libraries with the macros provided in `nRF5-cmake-scripts/includes/libraries.cmake`.
 
+To debug using CLion, follow the instructions in the [CLion tutorial](https://www.nrbtech.io/blog/2020/1/4/using-clion-for-nordic-nrf52-projects).
