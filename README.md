@@ -1,4 +1,4 @@
-This project is an example of implementing a Nordic CMake project from scratch using nRF5-cmake-scripts.
+This project demonstrates how to create a CMake based project for Nordic Semiconductor's nRF52 series embedded System-on-Chips (SoCs) using nRF5-cmake-scripts.
 
 This project depends on the following dependencies:
 
