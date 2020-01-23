@@ -42,7 +42,7 @@ git clone --recurse-submodules https://github.com/NRB-Tech/nRF5-cmake-scripts-ex
 
 Run a script to clean up the project ready for your own use (on Windows, run in git bash by right clicking in directory > "Git Bash here"):
 ```shell
-./cleanup
+./cleanup.sh
 ```
 
 Copy the example `CMakeLists.txt` as recommended in the `nRF5-cmake-scripts` readme:
