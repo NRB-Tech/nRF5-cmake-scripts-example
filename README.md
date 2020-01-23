@@ -15,12 +15,14 @@ This project depends on the following dependencies:
         brew install arm-none-eabi-gcc
         ```
     - On other platforms you can download from the [GNU-ARM toolchain page](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
-    - On Windows, you need to add this to your PATH. You can do this temporarily in Powershell using:
-        ```Powershell
-        $env:Path += ";C:\Program Files (x86)\GNU Tools Arm Embedded\9 2019-q4-major\bin"
-        ```
+    - On Windows, you need to add this to your PATH, see below
 - [git](https://git-scm.com/) - A version control system
 - [CMake](https://cmake.org/) - A build tool
+
+On Mac and Linux, your PATH is probably configured correctly automatically, but if not or on Windows you will need to ensure that all binaries are in your system PATH, or you can provide some executable paths directly in your CMake script (see errors when generating). On Windows, your PATH might need to look something like this:
+```
+C:\Program Files (x86)\GNU Tools Arm Embedded\9 2019-q4-major\bin;C:\Program Files\Nordic Semiconductor\nrf-command-line-tools\bin;%USERPROFILE%\AppData\Local\Programs\Python\Python36\Scripts;C:\Program Files\Git\cmd;C:\Program Files (x86)\SEGGER\JLink
+```
 
 To test this project after cloning from the repo, run
 ```shell
@@ -35,10 +37,15 @@ The steps below are also available at https://nrbtech.io/blog/2020/1/4/using-cma
 First, in a terminal/command window clone the [base project](https://github.com/NRB-Tech/nRF5-cmake-scripts-example-base) to set up the project structure:
 
 ```shell
-git clone --recurse-submodules git@github.com:NRB-Tech/nRF5-cmake-scripts-example-base.git .
+git clone --recurse-submodules https://github.com/NRB-Tech/nRF5-cmake-scripts-example-base.git .
 ```
 
-Then, copy the example `CMakeLists.txt` as recommended in the `nRF5-cmake-scripts` readme:
+Run a script to clean up the project ready for your own use (on Windows, run in git bash by right clicking in directory > "Git Bash here"):
+```shell
+./cleanup
+```
+
+Copy the example `CMakeLists.txt` as recommended in the `nRF5-cmake-scripts` readme:
 ```shell
 cmake -E copy nRF5-cmake-scripts/example/CMakeLists.txt .
 ```
@@ -53,7 +60,7 @@ cmake -Bcmake-build-download -G "Unix Makefiles" .
 cmake --build cmake-build-download/ --target download
 ```
 
-Then, copy across some files from an SDK example project
+Copy across some files from an SDK example project:
 
 ```shell
 cmake -E copy toolchains/nRF5/nRF5_SDK_16.0.0_98a08e2/examples/ble_peripheral/ble_app_template/pca10040/s132/armgcc/ble_app_template_gcc_nrf52.ld src/gcc_nrf52.ld
